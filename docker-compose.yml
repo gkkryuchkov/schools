@@ -20,8 +20,6 @@ services:
     restart: always
   web:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && /rails/bin/rails server -b 0.0.0.0"
-    entrypoint: /rails/entrypoint.sh
     volumes:
       - .:/rails
     ports:
@@ -29,6 +27,7 @@ services:
     depends_on:
       - db
     environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
       DATABASE_HOST: ${DATABASE_HOST:-db}
       DATABASE_USERNAME: ${DATABASE_USERNAME:-schools}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}

@@ -7,3 +7,42 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Если нет школ
+5.times { School.create } unless School.any?
+
+# Если нет классов
+unless Group.any?
+  school_ids = School.pluck(:id)
+  letters = (0...32).to_a.map{ |i| ('А'.ord + i).chr}
+
+  10.times do
+
+    Group.create(
+      school_id: school_ids.sample,
+      number: (1..11).to_a.sample,
+      letter: letters.sample
+    )
+  end
+end
+# Если нет студентов
+unless Student.any?
+
+  classes = Group.all.to_a
+
+  first_names = %w[Иван Петр Сергей Владимир Сергей]
+  surnames = %w[Иванов Петров Кузнецов Сергеев Павлов Дьяков Альпов Ефимов]
+  last_names = %w[Иванович Петрович Сидорович Сергеевич Артемович Кириллович]
+
+  30.times do
+    cl = classes.sample
+    Student.create(
+      first_name: first_names.sample,
+      last_name: last_names.sample,
+      surname: surnames.sample,
+      group_id: cl.id,
+      school_id: cl.school_id
+    )
+  end
+
+end
