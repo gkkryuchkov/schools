@@ -24,5 +24,6 @@ development:
   <<: *default
 test:
   <<: *default
+  database: schools_test
 production:
   <<: *default

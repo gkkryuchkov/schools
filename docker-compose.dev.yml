@@ -1,0 +1,54 @@
+version: "3"
+services:
+  db:
+    image: postgres:${POSTGRES_VERSION:-13}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-schools}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-schools_development}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER:-schools} -d $${POSTGRES_DB:-schools_development}",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+
+  web:
+    build: .
+    command: bundle exec rails server -b 0.0.0.0
+    volumes:
+      - .:/rails
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: ${RAILS_ENV:-development}
+      DATABASE_HOST: ${DATABASE_HOST:-db}
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-schools}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
+      DATABASE_NAME: ${DATABASE_NAME:-schools_development}
+    stdin_open: true
+    tty: true
+    develop:
+      watch:
+        # Синхронизация изменений в коде приложения
+        - action: sync
+          path: ./
+          target: /rails
+
+        # Перезапуск при изменении Gemfile
+        - action: rebuild
+          path: ./Gemfile
+        - action: rebuild
+          path: ./Gemfile.lock
+
+volumes:
+  db_data:

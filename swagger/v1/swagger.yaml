@@ -1,0 +1,113 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/schools/{school_id}/classes/{class_id}/students":
+    parameters:
+    - name: school_id
+      in: path
+      description: School ID
+      required: true
+      schema:
+        type: integer
+    - name: class_id
+      in: path
+      description: Class ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves students for a class
+      tags:
+      - Classes
+      responses:
+        '200':
+          description: successful - returns empty array when class has no students
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Student ID
+                        first_name:
+                          type: string
+                          description: First name
+                        last_name:
+                          type: string
+                          description: Last name
+                        surname:
+                          type: string
+                          description: Surname
+                        class_id:
+                          type: integer
+                          description: Class ID
+                        school_id:
+                          type: integer
+                          description: School ID
+                      required:
+                      - id
+                      - first_name
+                      - last_name
+                      - surname
+                      - class_id
+                      - school_id
+                required:
+                - data
+  "/schools/{id}/classes":
+    parameters:
+    - name: id
+      in: path
+      description: School ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Retrieves classes for a school
+      tags:
+      - Schools
+      responses:
+        '200':
+          description: successful - returns empty array when school has no classes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Class ID
+                        number:
+                          type: integer
+                          description: Class number
+                        letter:
+                          type: string
+                          description: Class letter
+                        students_count:
+                          type: integer
+                          description: Number of students in the class
+                      required:
+                      - id
+                      - number
+                      - letter
+                      - students_count
+                required:
+                - data
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: 127.0.0.1:3000
