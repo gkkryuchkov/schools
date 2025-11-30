@@ -13,6 +13,8 @@ Rails 7.1
 docker compose up -d
 ```
 
+При запуске с docker-compose.yml командой выше автоматичкски вызовется `db:seed` для инициализации БД тестовыми данными
+
 ## API Documentation
 
 Swagger документация доступна по адресу `/api-docs` после запуска приложения.
