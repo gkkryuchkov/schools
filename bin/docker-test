@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+# Запуск тестов в Docker
+
+# echo "Сборка образа"
+# docker-compose -f docker-compose.test.yml build
+
+echo "Запуск тестов"
+docker-compose -f docker-compose.test.yml run --rm test
+
+echo "Завершение тестовых контейнеров"
+docker-compose -f docker-compose.test.yml down -v

@@ -29,7 +29,7 @@ RSpec.describe 'Schools API', type: :request do
 
         let!(:school) { School.create! }
         let!(:class1) do
-          Group.create!(
+          StudyClass.create!(
             school: school,
             number: 1,
             letter: 'А',
@@ -37,7 +37,7 @@ RSpec.describe 'Schools API', type: :request do
           )
         end
         let!(:class2) do
-          Group.create!(
+          StudyClass.create!(
             school: school,
             number: 1,
             letter: 'Б',
@@ -45,7 +45,7 @@ RSpec.describe 'Schools API', type: :request do
           )
         end
         let!(:class3) do
-          Group.create!(
+          StudyClass.create!(
             school: school,
             number: 2,
             letter: 'В',
@@ -54,7 +54,7 @@ RSpec.describe 'Schools API', type: :request do
         end
         let!(:other_school) { School.create! }
         let!(:other_class) do
-          Group.create!(
+          StudyClass.create!(
             school: other_school,
             number: 3,
             letter: 'Г',

@@ -1,4 +1,6 @@
 class StudentsController < ApplicationController
+  before_action :set_student, only: %i[destroy]
+
   # POST /students
   # создание пользователя
   # в ответе в хэдере X-Auth-Token отдает токен для аутентификации
@@ -23,9 +25,27 @@ class StudentsController < ApplicationController
 
   # DELETE /students/{user_id}
   # Удаление пользователя, проверяет токен
-  def destroy; end
+  def destroy
+    auth_token = request.headers['X-Auth-Token']
+    # если токена нет - запрос не разрешен
+    head :not_authorized and return unless auth_token
+
+    # Если ученик не найден
+    head :bad_request and return unless @student
+
+    if @student.check_auth(auth_token)
+      # Если авторизационный токен корректен
+      @student.destroy
+    else
+      head :not_authorized and return
+    end
+  end
 
   private
+
+  def set_student
+    @student = Student.where(id: params[:id]).first
+  end
 
   def render_error
     head :method_not_allowed
@@ -39,7 +59,7 @@ class StudentsController < ApplicationController
       :class_id
     )
     # Переименовываем параметр
-    p[:group_id] = p.delete(:class_id)
+    p[:study_class_id] = p.delete(:class_id)
     p
   end
 end

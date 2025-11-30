@@ -1,24 +1,41 @@
-# README
+# Schools API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rails API приложение для управления школами, классами и учениками.
 
-Things you may want to cover:
+## Ruby version
 
-* Ruby version
+Ruby 3.3.0
+Rails 7.1
 
-* System dependencies
+## Запуск
 
-* Configuration
+```bash
+docker compose up -d
+```
 
-* Database creation
+## API Documentation
 
-* Database initialization
+Swagger документация доступна по адресу `/api-docs` после запуска приложения.
 
-* How to run the test suite
+## Модели
 
-* Services (job queues, cache servers, search engines, etc.)
+- `School` - Школа
+- `StudyClass` - Класс
+- `Student` - Студент
 
-* Deployment instructions
+## Тесты
+### Запуск тестов в Docker
 
-* ...
+```bash
+./bin/docker-test
+```
+
+### Запуск тестов локально (без Docker)
+
+```bash
+# Настройка базы данных
+rails db:create db:migrate
+
+# Запуск всех тестов
+bundle exec rspec
+```

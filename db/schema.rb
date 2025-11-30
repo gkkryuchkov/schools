@@ -14,31 +14,31 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_26_130819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "groups", force: :cascade do |t|
-    t.bigint "school_id", null: false
-    t.integer "number", null: false
-    t.string "letter", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "students_count", default: 0, null: false
-    t.index ["school_id"], name: "index_groups_on_school_id"
-  end
-
   create_table "schools", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "students", force: :cascade do |t|
-    t.bigint "group_id", null: false
+    t.bigint "study_class_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "surname", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["group_id"], name: "index_students_on_group_id"
+    t.index ["study_class_id"], name: "index_students_on_study_class_id"
   end
 
-  add_foreign_key "groups", "schools"
-  add_foreign_key "students", "groups"
+  create_table "study_classes", force: :cascade do |t|
+    t.bigint "school_id", null: false
+    t.integer "number", null: false
+    t.string "letter", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "students_count", default: 0, null: false
+    t.index ["school_id"], name: "index_study_classes_on_school_id"
+  end
+
+  add_foreign_key "students", "study_classes"
+  add_foreign_key "study_classes", "schools"
 end

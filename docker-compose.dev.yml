@@ -20,7 +20,9 @@ services:
     restart: always
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     command: bundle exec rails server -b 0.0.0.0
     volumes:
       - .:/rails
@@ -37,18 +39,6 @@ services:
       DATABASE_NAME: ${DATABASE_NAME:-schools_development}
     stdin_open: true
     tty: true
-    develop:
-      watch:
-        # Синхронизация изменений в коде приложения
-        - action: sync
-          path: ./
-          target: /rails
-
-        # Перезапуск при изменении Gemfile
-        - action: rebuild
-          path: ./Gemfile
-        - action: rebuild
-          path: ./Gemfile.lock
 
 volumes:
   db_data:

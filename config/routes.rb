@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     member do
       get :classes
     end
-    resources :groups, path: 'classes' do
+    resources :study_classes, path: 'classes' do
       member do
         get :students
       end

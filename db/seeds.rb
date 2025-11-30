@@ -12,12 +12,12 @@
 5.times { School.create } unless School.any?
 
 # Если нет классов
-unless Group.any?
+unless StudyClass.any?
   school_ids = School.pluck(:id)
   letters = (0...32).to_a.map { |i| ('А'.ord + i).chr }
 
   10.times do
-    Group.create(
+    StudyClass.create(
       school_id: school_ids.sample,
       number: (1..11).to_a.sample,
       letter: letters.sample
@@ -27,7 +27,7 @@ end
 # Если нет студентов
 unless Student.any?
 
-  classes = Group.all.to_a
+  classes = StudyClass.all.to_a
 
   first_names = %w[Иван Петр Сергей Владимир Сергей]
   surnames = %w[Иванов Петров Кузнецов Сергеев Павлов Дьяков Альпов Ефимов]
@@ -39,7 +39,7 @@ unless Student.any?
       first_name: first_names.sample,
       last_name: last_names.sample,
       surname: surnames.sample,
-      group_id: cl.id
+      study_class_id: cl.id
     )
   end
 

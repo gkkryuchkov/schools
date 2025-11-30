@@ -24,6 +24,9 @@ development:
   <<: *default
 test:
   <<: *default
-  database: schools_test
+  host: <%= ENV.fetch('DATABASE_HOST', 'localhost') %>
+  username: <%= ENV.fetch('DATABASE_USERNAME', 'schools') %>
+  password: <%= ENV.fetch('DATABASE_PASSWORD', 'password') %>
+  database: <%= ENV.fetch('DATABASE_NAME', 'schools_test') %>
 production:
   <<: *default

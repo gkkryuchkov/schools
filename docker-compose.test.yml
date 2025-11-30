@@ -1,0 +1,41 @@
+version: "3"
+services:
+  db_test:
+    image: postgres:${POSTGRES_VERSION:-13}
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-schools}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: schools_test
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER:-schools} -d schools_test",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: >
+      bash -c "
+        echo 'Waiting for database...' &&
+        bundle exec rails db:test:prepare &&
+        bundle exec rspec
+      "
+    volumes:
+      - .:/rails
+    depends_on:
+      db_test:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: test
+      DATABASE_HOST: db_test
+      DATABASE_USERNAME: ${POSTGRES_USER:-schools}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      DATABASE_NAME: schools_test
