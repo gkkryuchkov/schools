@@ -31,13 +31,3 @@ Swagger документация доступна по адресу `/api-docs` 
 ```bash
 ./bin/docker-test
 ```
-
-### Запуск тестов локально (без Docker)
-
-```bash
-# Настройка базы данных
-rails db:create db:migrate
-
-# Запуск всех тестов
-bundle exec rspec
-```
