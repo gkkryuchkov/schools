@@ -1,7 +1,9 @@
 class GroupsController < ApplicationController
   before_action :set_school
   before_action :set_group
-  def students; end
+  def students
+    @students = @group.students
+  end
 
   private
 
@@ -10,6 +12,6 @@ class GroupsController < ApplicationController
   end
 
   def set_group
-    @group = @school.greoups.find(paramsp: id)
+    @group = @school.classes.find(params[:id])
   end
 end

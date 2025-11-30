@@ -1,9 +1,9 @@
 require 'swagger_helper'
 
 RSpec.describe 'Groups API', type: :request do
-  path '/schools/{school_id}/classes/{class_id}/students' do
+  path '/schools/{school_id}/classes/{id}/students' do
     parameter name: :school_id, in: :path, type: :integer, description: 'School ID'
-    parameter name: :class_id, in: :path, type: :integer, description: 'Class ID'
+    parameter name: :id, in: :path, type: :integer, description: 'Class ID'
 
     get 'Retrieves students for a class' do
       tags 'Classes'
@@ -35,7 +35,7 @@ RSpec.describe 'Groups API', type: :request do
           Group.create!(
             school: school,
             number: 1,
-            letter: '',
+            letter: 'А',
             students_count: 2
           )
         end
@@ -43,25 +43,25 @@ RSpec.describe 'Groups API', type: :request do
           Student.create!(
             school: school,
             group: group,
-            first_name: 'OG5A;02',
-            last_name: '14C@0E<0=30468528G',
-            surname: 'CE>1>9=8:>2-!K@:8='
+            first_name: 'Вячеслав',
+            last_name: 'Абдурахмангаджиевич',
+            surname: 'Мухобойников-Сыркин'
           )
         end
         let!(:student2) do
           Student.create!(
             school: school,
             group: group,
-            first_name: '20=',
-            last_name: '20=>28G',
-            surname: '20=>2'
+            first_name: 'Иван',
+            last_name: 'Иванович',
+            surname: 'Иванов'
           )
         end
         let!(:other_group) do
           Group.create!(
             school: school,
             number: 2,
-            letter: '',
+            letter: 'Б',
             students_count: 1
           )
         end
@@ -69,13 +69,13 @@ RSpec.describe 'Groups API', type: :request do
           Student.create!(
             school: school,
             group: other_group,
-            first_name: '5B@',
-            last_name: '5B@>28G',
-            surname: '5B@>2'
+            first_name: 'Петр',
+            last_name: 'Петрович',
+            surname: 'Петров'
           )
         end
         let(:school_id) { school.id }
-        let(:class_id) { group.id }
+        let(:id) { group.id }
 
         run_test! do |response|
           json = JSON.parse(response.body)
@@ -86,9 +86,9 @@ RSpec.describe 'Groups API', type: :request do
           expect(student_ids).not_to include(other_student.id)
 
           student1_data = json['data'].find { |s| s['id'] == student1.id }
-          expect(student1_data['first_name']).to eq('OG5A;02')
-          expect(student1_data['last_name']).to eq('14C@0E<0=30468528G')
-          expect(student1_data['surname']).to eq('CE>1>9=8:>2-!K@:8=')
+          expect(student1_data['first_name']).to eq('Вячеслав')
+          expect(student1_data['last_name']).to eq('Абдурахмангаджиевич')
+          expect(student1_data['surname']).to eq('Мухобойников-Сыркин')
           expect(student1_data['class_id']).to eq(group.id)
           expect(student1_data['school_id']).to eq(school.id)
         end
@@ -109,12 +109,12 @@ RSpec.describe 'Groups API', type: :request do
           Group.create!(
             school: school,
             number: 3,
-            letter: '',
+            letter: 'В',
             students_count: 0
           )
         end
         let(:school_id) { school.id }
-        let(:class_id) { empty_group.id }
+        let(:id) { empty_group.id }
 
         run_test! do |response|
           json = JSON.parse(response.body)

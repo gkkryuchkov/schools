@@ -30,7 +30,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_26_130819) do
   end
 
   create_table "students", force: :cascade do |t|
-    t.bigint "school_id", null: false
     t.bigint "group_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
@@ -38,10 +37,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_26_130819) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_students_on_group_id"
-    t.index ["school_id"], name: "index_students_on_school_id"
   end
 
   add_foreign_key "groups", "schools"
   add_foreign_key "students", "groups"
-  add_foreign_key "students", "schools"
 end

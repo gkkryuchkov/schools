@@ -14,10 +14,9 @@
 # Если нет классов
 unless Group.any?
   school_ids = School.pluck(:id)
-  letters = (0...32).to_a.map{ |i| ('А'.ord + i).chr}
+  letters = (0...32).to_a.map { |i| ('А'.ord + i).chr }
 
   10.times do
-
     Group.create(
       school_id: school_ids.sample,
       number: (1..11).to_a.sample,
@@ -40,8 +39,7 @@ unless Student.any?
       first_name: first_names.sample,
       last_name: last_names.sample,
       surname: surnames.sample,
-      group_id: cl.id,
-      school_id: cl.school_id
+      group_id: cl.id
     )
   end
 

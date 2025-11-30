@@ -4,7 +4,7 @@ info:
   title: API V1
   version: v1
 paths:
-  "/schools/{school_id}/classes/{class_id}/students":
+  "/schools/{school_id}/classes/{id}/students":
     parameters:
     - name: school_id
       in: path
@@ -12,7 +12,7 @@ paths:
       required: true
       schema:
         type: integer
-    - name: class_id
+    - name: id
       in: path
       description: Class ID
       required: true

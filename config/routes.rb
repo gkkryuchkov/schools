@@ -5,11 +5,15 @@ Rails.application.routes.draw do
   resources :schools do
     member do
       get :classes
-      resources :groups do
+    end
+    resources :groups, path: 'classes' do
+      member do
         get :students
       end
     end
   end
+
+  resources :students, only: %i[create destroy]
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
