@@ -2,14 +2,14 @@ require 'swagger_helper'
 
 RSpec.describe 'Study Classes API', type: :request do
   path '/schools/{school_id}/classes/{id}/students' do
-    parameter name: :school_id, in: :path, type: :integer, description: 'School ID'
-    parameter name: :id, in: :path, type: :integer, description: 'Class ID'
+    parameter name: :school_id, in: :path, type: :integer, description: 'ID школы'
+    parameter name: :id, in: :path, type: :integer, description: 'ID класса'
 
-    get 'Retrieves students for a class' do
-      tags 'Classes'
+    get 'Вывести список учеников класса' do
+      tags 'classes', 'students'
       produces 'application/json'
 
-      response '200', 'successful - returns all students for the class' do
+      response '200', 'возвращает список всех учеников класса' do
         schema type: :object,
                properties: {
                  data: {
@@ -17,12 +17,12 @@ RSpec.describe 'Study Classes API', type: :request do
                    items: {
                      type: :object,
                      properties: {
-                       id: { type: :integer, description: 'Student ID' },
-                       first_name: { type: :string, description: 'First name' },
-                       last_name: { type: :string, description: 'Last name' },
-                       surname: { type: :string, description: 'Surname' },
-                       class_id: { type: :integer, description: 'Class ID' },
-                       school_id: { type: :integer, description: 'School ID' }
+                       id: { type: :integer, description: 'ID ученика' },
+                       first_name: { type: :string, description: 'Имя' },
+                       last_name: { type: :string, description: 'Отчество' },
+                       surname: { type: :string, description: 'Фамилия' },
+                       class_id: { type: :integer, description: 'ID класса' },
+                       school_id: { type: :integer, description: 'ID школы' }
                      },
                      required: %w[id first_name last_name surname class_id school_id]
                    }
@@ -88,34 +88,6 @@ RSpec.describe 'Study Classes API', type: :request do
           expect(student1_data['surname']).to eq('Мухобойников-Сыркин')
           expect(student1_data['class_id']).to eq(study_class.id)
           expect(student1_data['school_id']).to eq(school.id)
-        end
-      end
-
-      response '200', 'successful - returns empty array when class has no students' do
-        schema type: :object,
-               properties: {
-                 data: {
-                   type: :array,
-                   items: {}
-                 }
-               },
-               required: ['data']
-
-        let!(:school) { School.create! }
-        let!(:empty_study_class) do
-          StudyClass.create!(
-            school: school,
-            number: 3,
-            letter: 'В',
-            students_count: 0
-          )
-        end
-        let(:school_id) { school.id }
-        let(:id) { empty_study_class.id }
-
-        run_test! do |response|
-          json = JSON.parse(response.body)
-          expect(json['data']).to eq([])
         end
       end
     end

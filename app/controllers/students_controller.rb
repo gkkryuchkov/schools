@@ -28,7 +28,7 @@ class StudentsController < ApplicationController
   def destroy
     auth_token = request.headers['X-Auth-Token']
     # если токена нет - запрос не разрешен
-    head :not_authorized and return unless auth_token
+    head :unauthorized and return unless auth_token
 
     # Если ученик не найден
     head :bad_request and return unless @student
@@ -37,7 +37,7 @@ class StudentsController < ApplicationController
       # Если авторизационный токен корректен
       @student.destroy
     else
-      head :not_authorized and return
+      head :unauthorized and return
     end
   end
 

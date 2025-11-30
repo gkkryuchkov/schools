@@ -4,64 +4,6 @@ info:
   title: API V1
   version: v1
 paths:
-  "/schools/{school_id}/classes/{id}/students":
-    parameters:
-    - name: school_id
-      in: path
-      description: School ID
-      required: true
-      schema:
-        type: integer
-    - name: id
-      in: path
-      description: Class ID
-      required: true
-      schema:
-        type: integer
-    get:
-      summary: Retrieves students for a class
-      tags:
-      - Classes
-      responses:
-        '200':
-          description: successful - returns empty array when class has no students
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: integer
-                          description: Student ID
-                        first_name:
-                          type: string
-                          description: First name
-                        last_name:
-                          type: string
-                          description: Last name
-                        surname:
-                          type: string
-                          description: Surname
-                        class_id:
-                          type: integer
-                          description: Class ID
-                        school_id:
-                          type: integer
-                          description: School ID
-                      required:
-                      - id
-                      - first_name
-                      - last_name
-                      - surname
-                      - class_id
-                      - school_id
-                required:
-                - data
   "/schools/{id}/classes":
     parameters:
     - name: id
@@ -71,12 +13,12 @@ paths:
       schema:
         type: integer
     get:
-      summary: Retrieves classes for a school
+      summary: Вывести список классов школы
       tags:
-      - Schools
+      - classes
       responses:
         '200':
-          description: successful - returns empty array when school has no classes
+          description: возвращает все классы школы
           content:
             application/json:
               schema:
@@ -89,21 +31,178 @@ paths:
                       properties:
                         id:
                           type: integer
-                          description: Class ID
+                          description: ID класса
                         number:
                           type: integer
-                          description: Class number
+                          description: Номер класса
                         letter:
                           type: string
-                          description: Class letter
+                          description: Буква класса
                         students_count:
                           type: integer
-                          description: Number of students in the class
+                          description: Количество учеников в классе
                       required:
                       - id
                       - number
                       - letter
                       - students_count
+                required:
+                - data
+  "/students":
+    post:
+      summary: Создает ученика
+      tags:
+      - students
+      description: Создает ученика в конкретном классе конкретной школы. Возвращает
+        токен в хэдере X-Auth-Token.
+      parameters: []
+      responses:
+        '201':
+          description: ученик успешно создан
+          headers:
+            X-Auth-Token:
+              schema:
+                type: string
+              description: Аутентификационный токен ученика
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID ученика
+                  first_name:
+                    type: string
+                    description: Имя
+                  last_name:
+                    type: string
+                    description: Отчество
+                  surname:
+                    type: string
+                    description: Фамилия
+                  class_id:
+                    type: integer
+                    description: ID класса
+                required:
+                - id
+                - first_name
+                - last_name
+                - surname
+                - class_id
+        '405':
+          description: не заполнены обязательные поля
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                school_id:
+                  type: integer
+                  description: ID школы
+                class_id:
+                  type: integer
+                  description: ID класса
+                first_name:
+                  type: string
+                  description: Имя
+                last_name:
+                  type: string
+                  description: Отчество
+                surname:
+                  type: string
+                  description: Фамилия
+              required:
+              - school_id
+              - class_id
+              - first_name
+              - last_name
+              - surname
+  "/students/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: ID ученика
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Удаляет ученика
+      tags:
+      - students
+      description: Удаляет ученика. Необходимо передать токен ученика в хэдере X-Auth-Token.
+      parameters:
+      - name: X-Auth-Token
+        in: header
+        description: Аутентификационный токен ученика
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ученик создан
+        '401':
+          description: токен принадлежит другому ученику
+        '400':
+          description: студент не найден
+  "/schools/{school_id}/classes/{id}/students":
+    parameters:
+    - name: school_id
+      in: path
+      description: ID школы
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: ID класса
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Вывести список учеников класса
+      tags:
+      - classes
+      - students
+      responses:
+        '200':
+          description: возвращает список всех учеников класса
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID ученика
+                        first_name:
+                          type: string
+                          description: Имя
+                        last_name:
+                          type: string
+                          description: Отчество
+                        surname:
+                          type: string
+                          description: Фамилия
+                        class_id:
+                          type: integer
+                          description: ID класса
+                        school_id:
+                          type: integer
+                          description: ID школы
+                      required:
+                      - id
+                      - first_name
+                      - last_name
+                      - surname
+                      - class_id
+                      - school_id
                 required:
                 - data
 servers:

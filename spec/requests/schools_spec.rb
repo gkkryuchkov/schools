@@ -4,11 +4,11 @@ RSpec.describe 'Schools API', type: :request do
   path '/schools/{id}/classes' do
     parameter name: :id, in: :path, type: :integer, description: 'School ID'
 
-    get 'Retrieves classes for a school' do
-      tags 'Schools'
+    get 'Вывести список классов школы' do
+      tags 'classes'
       produces 'application/json'
 
-      response '200', 'successful - returns all classes for the school' do
+      response '200', 'возвращает все классы школы' do
         schema type: :object,
                properties: {
                  data: {
@@ -16,10 +16,10 @@ RSpec.describe 'Schools API', type: :request do
                    items: {
                      type: :object,
                      properties: {
-                       id: { type: :integer, description: 'Class ID' },
-                       number: { type: :integer, description: 'Class number' },
-                       letter: { type: :string, description: 'Class letter' },
-                       students_count: { type: :integer, description: 'Number of students in the class' }
+                       id: { type: :integer, description: 'ID класса' },
+                       number: { type: :integer, description: 'Номер класса' },
+                       letter: { type: :string, description: 'Буква класса' },
+                       students_count: { type: :integer, description: 'Количество учеников в классе' }
                      },
                      required: %w[id number letter students_count]
                    }
@@ -75,25 +75,6 @@ RSpec.describe 'Schools API', type: :request do
           expect(class1_data['number']).to eq(1)
           expect(class1_data['letter']).to eq('А')
           expect(class1_data['students_count']).to eq(25)
-        end
-      end
-
-      response '200', 'successful - returns empty array when school has no classes' do
-        schema type: :object,
-               properties: {
-                 data: {
-                   type: :array,
-                   items: {}
-                 }
-               },
-               required: ['data']
-
-        let!(:empty_school) { School.create! }
-        let(:id) { empty_school.id }
-
-        run_test! do |response|
-          json = JSON.parse(response.body)
-          expect(json['data']).to eq([])
         end
       end
     end

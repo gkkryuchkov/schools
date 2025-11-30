@@ -14,7 +14,7 @@ services:
           "CMD-SHELL",
           "pg_isready -U $${POSTGRES_USER:-schools} -d $${POSTGRES_DB:-schools_development}",
         ]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 5
     restart: always
